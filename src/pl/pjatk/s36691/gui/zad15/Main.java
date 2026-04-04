@@ -1,7 +1,5 @@
 package pl.pjatk.s36691.gui.zad15;
 
-import java.util.Arrays;
-
 public class Main {
     public static void main(String[] args) {
 
