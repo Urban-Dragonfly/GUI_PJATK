@@ -6,9 +6,8 @@ import java.awt.*;
 
 public class Calc extends JPanel {
 
-    private final Font font = new Font("Segoe UI", Font.BOLD, 20);
-
     public Calc() {
+        Font font = new Font("Segoe UI", Font.BOLD, 20);
         setBackground(new Color(64,32,64));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setOpaque(true);
@@ -39,7 +38,7 @@ public class Calc extends JPanel {
         add(Box.createVerticalStrut(75));
         add(sum);
 
-        sum.addActionListener(e -> {
+        sum.addActionListener(_ -> {
             if (aField.getText().isEmpty() || bField.getText().isEmpty()) return;
             try {
                 double aDouble = Double.parseDouble(aField.getText());
