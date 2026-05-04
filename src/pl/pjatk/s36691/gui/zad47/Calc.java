@@ -15,17 +15,23 @@ public class Calc extends JPanel {
         JTextField aField = new JTextField("23");
         aField.setHorizontalAlignment(JTextField.CENTER);
         aField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aField.setMinimumSize(new Dimension(150, 30));
+        aField.setPreferredSize(new Dimension(150, 30));
         aField.setMaximumSize(new Dimension(150, 30));
         aField.setFont(font);
 
         JTextField bField = new JTextField("42");
         bField.setHorizontalAlignment(JTextField.CENTER);
         bField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bField.setMinimumSize(new Dimension(150, 30));
+        bField.setPreferredSize(new Dimension(150, 30));
         bField.setMaximumSize(new Dimension(150, 30));
         bField.setFont(font);
 
         JButton sum = new JButton("SUM");
         sum.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sum.setMinimumSize(new Dimension(300, 100));
+        sum.setPreferredSize(new Dimension(300, 100));
         sum.setMaximumSize(new Dimension(300, 100));
         sum.setBackground(new Color(158, 68, 58));
         sum.setForeground(new Color(180, 180, 180));
