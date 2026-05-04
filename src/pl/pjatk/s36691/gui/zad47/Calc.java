@@ -45,7 +45,7 @@ public class Calc extends JPanel {
                 double bDouble = Double.parseDouble(bField.getText());
                 double result = aDouble + bDouble;
 
-                sum.setText(result == (long) result ? String.valueOf((int) result) : String.valueOf(result));
+                sum.setText(result == (long) result ? String.valueOf((long) result) : String.valueOf(result));
             } catch (NumberFormatException ex) {
                 sum.setText("ERROR");
             }
