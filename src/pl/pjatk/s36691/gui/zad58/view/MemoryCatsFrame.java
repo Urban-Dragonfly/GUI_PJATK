@@ -18,13 +18,9 @@ public class MemoryCatsFrame extends JFrame {
             "/pl/pjatk/s36691/gui/zad58/assets/ui/side_menu.png";
     private static final String[] APP_ICON_PATHS = {
             "/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_16.png",
-            "/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_24.png",
             "/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_32.png",
-            "/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_48.png",
             "/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_64.png",
-            "/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_128.png",
             "/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_256.png",
-            "/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_512.png"
     };
 
     private final Font titleFont;
@@ -129,12 +125,6 @@ public class MemoryCatsFrame extends JFrame {
             }
         });
         setTitle("Memory Cats");
-        setIconImages(List.of(
-                ImageLoader.loadImage("/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_16.png"),
-                ImageLoader.loadImage("/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_32.png"),
-                ImageLoader.loadImage("/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_64.png"),
-                ImageLoader.loadImage("/pl/pjatk/s36691/gui/zad58/assets/ui/app_icon_256.png")
-        ));
         setIconImages(loadAppIcons());
         setSize(1280, 900);
         setMinimumSize(new Dimension(1280, 900));
