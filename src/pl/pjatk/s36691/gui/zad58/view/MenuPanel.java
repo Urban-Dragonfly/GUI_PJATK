@@ -1,5 +1,6 @@
 package pl.pjatk.s36691.gui.zad58.view;
 
+import pl.pjatk.s36691.gui.zad58.model.Difficulty;
 import pl.pjatk.s36691.gui.zad58.util.ImageLoader;
 
 import javax.swing.*;
@@ -11,10 +12,20 @@ public class MenuPanel extends VerticalFiveSlicePanel {
     private static final Color PLAYER_ONE_COLOR = new Color(5, 100, 100);
     private static final Color PLAYER_TWO_COLOR = new Color(160, 10, 10);
 
+    private static final Color PLAYER_ONE_ACTIVE_COLOR = PLAYER_ONE_COLOR.brighter();
+    private static final Color PLAYER_ONE_INACTIVE_COLOR = PLAYER_ONE_COLOR.darker();
+
+    private static final Color PLAYER_TWO_ACTIVE_COLOR = PLAYER_TWO_COLOR.brighter();
+    private static final Color PLAYER_TWO_INACTIVE_COLOR = PLAYER_TWO_COLOR.darker();
+
     private static final String RADIO_UNCHECKED_ICON =
             "/pl/pjatk/s36691/gui/zad58/assets/ui/radio_button_unchecked.png";
+    private static final String RADIO_UNCHECKED_BLOCKED_ICON =
+            "/pl/pjatk/s36691/gui/zad58/assets/ui/radio_button_unchecked_blocked.png";
     private static final String RADIO_CHECKED_ICON =
             "/pl/pjatk/s36691/gui/zad58/assets/ui/radio_button_checked.png";
+    private static final String RADIO_CHECKED_BLOCKED_ICON =
+            "/pl/pjatk/s36691/gui/zad58/assets/ui/radio_button_checked_blocked.png";
 
     private static final String BUTTON_NORMAL_ICON =
             "/pl/pjatk/s36691/gui/zad58/assets/ui/button_normal.png";
@@ -22,18 +33,31 @@ public class MenuPanel extends VerticalFiveSlicePanel {
             "/pl/pjatk/s36691/gui/zad58/assets/ui/button_pressed.png";
     private static final String BUTTON_HOVER_ICON =
             "/pl/pjatk/s36691/gui/zad58/assets/ui/button_hover.png";
+    private static final String BUTTON_BLOCKED_ICON =
+            "/pl/pjatk/s36691/gui/zad58/assets/ui/button_blocked.png";
 
     private final Icon radioUncheckedIcon;
     private final Icon radioCheckedIcon;
+    private final Icon radioUncheckedBlockedIcon;
+    private final Icon radioCheckedBlockedIcon;
 
     private final Icon buttonPressedIcon;
     private final Icon buttonHoverIcon;
     private final Icon buttonNormalIcon;
+    private final Icon buttonBlockedIcon;
+
+    private JPanel playerOnePanel;
+    private JPanel playerTwoPanel;
+
+    private JLabel playerOneTitleLabel;
+    private JLabel playerTwoTitleLabel;
 
     private final JLabel playerOneScoreLabel;
+    private final JLabel playerOneMovesLabel;
     private final JLabel playerOneTimeLabel;
 
     private final JLabel playerTwoScoreLabel;
+    private final JLabel playerTwoMovesLabel;
     private final JLabel playerTwoTimeLabel;
 
     private final JRadioButton onePlayerButton;
@@ -56,16 +80,21 @@ public class MenuPanel extends VerticalFiveSlicePanel {
 
         radioUncheckedIcon = loadScaledIcon(RADIO_UNCHECKED_ICON, 24, 24);
         radioCheckedIcon = loadScaledIcon(RADIO_CHECKED_ICON, 24, 24);
+        radioUncheckedBlockedIcon = loadScaledIcon(RADIO_UNCHECKED_BLOCKED_ICON, 24, 24);
+        radioCheckedBlockedIcon = loadScaledIcon(RADIO_CHECKED_BLOCKED_ICON, 24, 24);
 
         buttonNormalIcon = loadScaledIcon(BUTTON_NORMAL_ICON, 160, 48);
         buttonPressedIcon = loadScaledIcon(BUTTON_PRESSED_ICON, 160, 48);
         buttonHoverIcon = loadScaledIcon(BUTTON_HOVER_ICON, 160, 48);
+        buttonBlockedIcon = loadScaledIcon(BUTTON_BLOCKED_ICON, 160, 48);
 
         playerOneScoreLabel = createInfoLabel("Score: 0", labelFont, PLAYER_ONE_COLOR);
-        playerOneTimeLabel = createInfoLabel("Time: 10:00", labelFont, PLAYER_ONE_COLOR);
+        playerOneMovesLabel = createInfoLabel("Moves: 0", labelFont, PLAYER_ONE_COLOR);
+        playerOneTimeLabel = createInfoLabel("Time: 00:00", labelFont, PLAYER_ONE_COLOR);
 
         playerTwoScoreLabel = createInfoLabel("Score: 0", labelFont, PLAYER_TWO_COLOR);
-        playerTwoTimeLabel = createInfoLabel("Time: 10:00", labelFont, PLAYER_TWO_COLOR);
+        playerTwoMovesLabel = createInfoLabel("Moves: 0", labelFont, PLAYER_TWO_COLOR);
+        playerTwoTimeLabel = createInfoLabel("Time: 00:00", labelFont, PLAYER_TWO_COLOR);
 
         onePlayerButton = createRadioButton("1 Player", labelFont);
         twoPlayersButton = createRadioButton("2 Players", labelFont);
@@ -88,40 +117,47 @@ public class MenuPanel extends VerticalFiveSlicePanel {
         add(Box.createVerticalGlue());
 
         add(createBottomControlsPanel(labelFont));
+
+        setPlayerTwoPanelVisible(false);
     }
 
     private JPanel createPlayersInfoPanel(Font labelFont) {
+
         JPanel panel = createTransparentPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        panel.add(createPlayerPanel(
-                "PLAYER 1",
-                playerOneScoreLabel,
-                playerOneTimeLabel,
-                labelFont,
-                PLAYER_ONE_COLOR
-        ));
-        panel.add(Box.createVerticalStrut(36));
-        panel.add(createPlayerPanel(
-                "PLAYER 2",
-                playerTwoScoreLabel,
-                playerTwoTimeLabel,
-                labelFont,
-                PLAYER_TWO_COLOR
-        ));
+        playerOneTitleLabel = createSectionTitle("PLAYER 1", labelFont, PLAYER_ONE_COLOR);
+        playerTwoTitleLabel = createSectionTitle("PLAYER 2", labelFont, PLAYER_TWO_COLOR);
 
+        playerOnePanel = createPlayerPanel(
+                playerOneTitleLabel,
+                playerOneScoreLabel,
+                playerOneMovesLabel,
+                playerOneTimeLabel
+        );
+
+        playerTwoPanel = createPlayerPanel(
+                playerTwoTitleLabel,
+                playerTwoScoreLabel,
+                playerTwoMovesLabel,
+                playerTwoTimeLabel
+        );
+
+        panel.add(playerOnePanel);
+        panel.add(Box.createVerticalStrut(36));
+        panel.add(playerTwoPanel);
         return panel;
     }
 
-    private JPanel createPlayerPanel(String title, JLabel scoreLabel, JLabel timeLabel, Font font, Color color) {
+    private JPanel createPlayerPanel(JLabel titleLabel, JLabel scoreLabel, JLabel movesLabel, JLabel timeLabel) {
         JPanel panel = createTransparentPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        JLabel titleLabel = createSectionTitle(title, font, color);
 
         panel.add(titleLabel);
         panel.add(Box.createVerticalStrut(6));
         panel.add(scoreLabel);
+        panel.add(Box.createVerticalStrut(4));
+        panel.add(movesLabel);
         panel.add(Box.createVerticalStrut(4));
         panel.add(timeLabel);
 
@@ -235,6 +271,8 @@ public class MenuPanel extends VerticalFiveSlicePanel {
 
         button.setIcon(radioUncheckedIcon);
         button.setSelectedIcon(radioCheckedIcon);
+        button.setDisabledIcon(radioUncheckedBlockedIcon);
+        button.setDisabledSelectedIcon(radioCheckedBlockedIcon);
 
         button.setIconTextGap(8);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -261,6 +299,7 @@ public class MenuPanel extends VerticalFiveSlicePanel {
         button.setIcon(buttonNormalIcon);
         button.setPressedIcon(buttonPressedIcon);
         button.setRolloverIcon(buttonHoverIcon);
+        button.setDisabledIcon(buttonBlockedIcon);
 
         button.setRolloverEnabled(true);
         button.setFocusPainted(false);
@@ -280,6 +319,26 @@ public class MenuPanel extends VerticalFiveSlicePanel {
         return resetButton;
     }
 
+    public JRadioButton getOnePlayerButton() {
+        return onePlayerButton;
+    }
+
+    public JRadioButton getTwoPlayersButton() {
+        return twoPlayersButton;
+    }
+
+    public JRadioButton getEasyButton() {
+        return easyButton;
+    }
+
+    public JRadioButton getMediumButton() {
+        return mediumButton;
+    }
+
+    public JRadioButton getHardButton() {
+        return hardButton;
+    }
+
     public int getSelectedPlayerCount() {
         if (twoPlayersButton.isSelected()) {
             return 2;
@@ -288,16 +347,39 @@ public class MenuPanel extends VerticalFiveSlicePanel {
         return 1;
     }
 
-    public String getSelectedDifficulty() {
+    public void setPlayerTwoPanelVisible(boolean visible) {
+        playerTwoPanel.setVisible(visible);
+        playerTwoPanel.revalidate();
+        playerTwoPanel.repaint();
+    }
+
+    public Difficulty getSelectedDifficulty() {
         if (mediumButton.isSelected()) {
-            return "MEDIUM";
+            return Difficulty.MEDIUM;
         }
 
         if (hardButton.isSelected()) {
-            return "HARD";
+            return Difficulty.HARD;
         }
 
-        return "EASY";
+        return Difficulty.EASY;
+    }
+
+    public void setPlayerModeSelectionEnabled(boolean enabled) {
+        onePlayerButton.setEnabled(enabled);
+        twoPlayersButton.setEnabled(enabled);
+    }
+
+    public void setDifficultySelectionEnabled(boolean enabled) {
+        easyButton.setEnabled(enabled);
+        mediumButton.setEnabled(enabled);
+        hardButton.setEnabled(enabled);
+    }
+
+    public void setPreGameControlsEnabled(boolean enabled) {
+        startButton.setEnabled(enabled);
+        setPlayerModeSelectionEnabled(enabled);
+        setDifficultySelectionEnabled(enabled);
     }
 
     public void updatePlayerOneScore(int score) {
@@ -308,11 +390,66 @@ public class MenuPanel extends VerticalFiveSlicePanel {
         playerTwoScoreLabel.setText("Score: " + score);
     }
 
+    public void updatePlayerOneMoves(int moves) {
+        playerOneMovesLabel.setText("Moves: " + moves);
+    }
+
+    public void updatePlayerTwoMoves(int moves) {
+        playerTwoMovesLabel.setText("Moves: " + moves);
+    }
+
     public void updatePlayerOneTime(String time) {
         playerOneTimeLabel.setText("Time: " + time);
     }
 
     public void updatePlayerTwoTime(String time) {
         playerTwoTimeLabel.setText("Time: " + time);
+    }
+
+    public void resetPlayerInfo() {
+        updatePlayerOneScore(0);
+        updatePlayerTwoScore(0);
+        updatePlayerOneMoves(0);
+        updatePlayerTwoMoves(0);
+        updatePlayerOneTime("00:00");
+        updatePlayerTwoTime("00:00");
+    }
+
+    public void setActivePlayer(int playerNumber) {
+        boolean twoPlayersMode = getSelectedPlayerCount() == 2;
+
+        if (!twoPlayersMode) {
+            setPlayerOneColor(PLAYER_ONE_ACTIVE_COLOR);
+            setPlayerTwoColor(PLAYER_TWO_INACTIVE_COLOR);
+            return;
+        }
+
+        if (playerNumber == 1) {
+            setPlayerOneColor(PLAYER_ONE_ACTIVE_COLOR);
+            setPlayerTwoColor(PLAYER_TWO_INACTIVE_COLOR);
+        } else {
+            setPlayerOneColor(PLAYER_ONE_INACTIVE_COLOR);
+            setPlayerTwoColor(PLAYER_TWO_ACTIVE_COLOR);
+        }
+
+    }
+
+    private void setPlayerOneColor(Color color) {
+        playerOneTitleLabel.setForeground(color);
+        playerOneScoreLabel.setForeground(color);
+        playerOneMovesLabel.setForeground(color);
+        playerOneTimeLabel.setForeground(color);
+    }
+
+    private void setPlayerTwoColor(Color color) {
+        playerTwoTitleLabel.setForeground(color);
+        playerTwoScoreLabel.setForeground(color);
+        playerTwoMovesLabel.setForeground(color);
+        playerTwoTimeLabel.setForeground(color);
+    }
+
+    public void resetPlayerColors() {
+        setPlayerOneColor(PLAYER_ONE_COLOR);
+        setPlayerTwoColor(PLAYER_TWO_COLOR);
     }
 }
