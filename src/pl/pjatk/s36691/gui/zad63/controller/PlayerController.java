@@ -8,10 +8,14 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.Locale;
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import java.net.URL;
 
@@ -63,7 +67,7 @@ public class PlayerController {
     private Button stopButton;
 
     @FXML
-    private Button shuffleButton;
+    private ToggleButton shuffleButton;
 
     @FXML
     private ToggleButton loopToggleButton;
@@ -74,12 +78,18 @@ public class PlayerController {
     private Song currentSong;
     private MediaPlayer mediaPlayer;
     private Song loadedSong;
+    private boolean userChangingSlider;
+    private final Random random = new Random();
+    private final List<Song> shuffledQueue = new ArrayList<>();
 
     @FXML
     private void initialize() {
         nowPlayingLabel.setText("No track selected");
         currentTimeLabel.setText("00:00");
         totalTimeLabel.setText("00:00");
+        progressSlider.setMin(0);
+        progressSlider.setMax(1);
+        progressSlider.setValue(0);
 
         titleColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().title()));
@@ -160,23 +170,42 @@ public class PlayerController {
                 .selectedItemProperty()
                 .addListener((observable, odlSong, newSong) -> {
                     currentSong = newSong;
+
+                    if (!isPlaying()) {
+                        updateNowPlayingLabel();
+                    }
                 });
     }
 
     private void updateNowPlayingLabel() {
-        if (loadedSong != null) {
-            nowPlayingLabel.setText(loadedSong.artist() + " - " + loadedSong.title());
+        Song songToDisplay = isPlaying() ? loadedSong : currentSong;
+
+        if (songToDisplay != null) {
+            nowPlayingLabel.setText(songToDisplay.artist() + " - " + songToDisplay.title());
         } else {
             nowPlayingLabel.setText("No track selected");
         }
     }
 
+    private boolean isPlaying() {
+        return mediaPlayer != null
+                && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING;
+    }
+
     private void initializePlayerControls() {
         playPauseButton.setOnAction(event -> handlePlayPause());
         stopButton.setOnAction(event -> handleStop());
+        shuffleButton.setOnAction(event -> handleShuffleToggle());
+        initializeProgressSlider();
     }
 
     private void handlePlayPause() {
+        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer.pause();
+            playPauseButton.setText("▶");
+            return;
+        }
+
         if (currentSong == null) {
             currentSong = songsTableView.getSelectionModel().getSelectedItem();
         }
@@ -186,27 +215,34 @@ public class PlayerController {
             return;
         }
 
-        if (mediaPlayer == null || loadedSong != currentSong) {
-            loadCurrentSong();
-
-            if (mediaPlayer == null) {
-                return;
-            }
-
-            mediaPlayer.play();
-            playPauseButton.setText("⏸");
+        if (mediaPlayer == null || loadedSong == null || !loadedSong.equals(currentSong)) {
+            playSong(currentSong);
             return;
         }
 
-        MediaPlayer.Status status = mediaPlayer.getStatus();
+        mediaPlayer.play();
+        playPauseButton.setText("⏸");
+        updateNowPlayingLabel();
+    }
 
-        if (status == MediaPlayer.Status.PLAYING) {
-            mediaPlayer.pause();
-            playPauseButton.setText("▶");
-        } else {
-            mediaPlayer.play();
-            playPauseButton.setText("⏸");
+    private void playSong(Song song) {
+        if (song == null) {
+            nowPlayingLabel.setText("Select a track first");
+            return;
         }
+
+        currentSong = song;
+        songsTableView.getSelectionModel().select(song);
+
+        loadCurrentSong();
+
+        if (mediaPlayer == null) {
+            return;
+        }
+
+        mediaPlayer.play();
+        playPauseButton.setText("⏸");
+        updateNowPlayingLabel();
     }
 
     private void loadCurrentSong() {
@@ -228,8 +264,46 @@ public class PlayerController {
         Media media = new Media(songUrl.toExternalForm());
         mediaPlayer = new MediaPlayer(media);
         loadedSong = currentSong;
-
+        connectPlayerToProgress();
         updateNowPlayingLabel();
+    }
+
+    private void connectPlayerToProgress() {
+        mediaPlayer.setOnReady(() -> {
+            Duration totalDuration = mediaPlayer.getTotalDuration();
+
+            totalTimeLabel.setText(formatDuration(totalDuration));
+            progressSlider.setMax(totalDuration.toSeconds());
+            progressSlider.setValue(0);
+            currentTimeLabel.setText("00:00");
+        });
+
+        mediaPlayer.currentTimeProperty().addListener((observable, oldTime, newTime) -> {
+            currentTimeLabel.setText(formatDuration(newTime));
+
+            if (!userChangingSlider) {
+                progressSlider.setValue(newTime.toSeconds());
+            }
+        });
+
+        mediaPlayer.setOnEndOfMedia(() -> {
+            progressSlider.setValue(progressSlider.getMax());
+            currentTimeLabel.setText(totalTimeLabel.getText());
+            playNextSong();
+        });
+    }
+
+    private String formatDuration(Duration duration) {
+        if (duration == null || duration.isUnknown() || duration.isIndefinite()) {
+            return "00:00";
+        }
+
+        int totalSeconds = (int) Math.floor(duration.toSeconds());
+
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     private void handleStop() {
@@ -238,6 +312,109 @@ public class PlayerController {
         }
 
         mediaPlayer.stop();
+        mediaPlayer.seek(Duration.ZERO);
+
+        playPauseButton.setText("▶");
+        currentTimeLabel.setText("00:00");
+        progressSlider.setValue(0);
+    }
+
+    private void initializeProgressSlider() {
+        progressSlider.setOnMousePressed(event -> userChangingSlider = true);
+
+        progressSlider.setOnMouseReleased(event -> {
+            userChangingSlider = false;
+            seekToSliderValue();
+        });
+    }
+
+    private void seekToSliderValue() {
+        if (mediaPlayer == null) {
+            return;
+        }
+
+        mediaPlayer.seek(Duration.seconds(progressSlider.getValue()));
+    }
+
+    private void playNextSong() {
+        if (shuffleButton.isSelected()) {
+            playNextShuffledSong();
+            return;
+        }
+
+        List<Song> visibleSongs = songsTableView.getItems();
+
+        if (visibleSongs.isEmpty() || loadedSong == null) {
+            finishPlaylistPlayback();
+            return;
+        }
+
+        int currentIndex = visibleSongs.indexOf(loadedSong);
+
+        if (currentIndex == -1) {
+            finishPlaylistPlayback();
+            return;
+        }
+
+        int nextIndex = currentIndex + 1;
+
+        if (nextIndex >= visibleSongs.size()) {
+            if (loopToggleButton.isSelected()) {
+                nextIndex = 0;
+            } else {
+                finishPlaylistPlayback();
+                return;
+            }
+        }
+
+        Song nextSong = visibleSongs.get(nextIndex);
+        playSong(nextSong);
+    }
+
+    private void playNextShuffledSong() {
+        if (shuffledQueue.isEmpty()) {
+            if (loopToggleButton.isSelected()) {
+                rebuildShuffleQueue();
+            } else {
+                finishPlaylistPlayback();
+                return;
+            }
+        }
+
+        if (shuffledQueue.isEmpty()) {
+            finishPlaylistPlayback();
+            return;
+        }
+
+        Song nextSong = shuffledQueue.removeFirst();
+        playSong(nextSong);
+    }
+
+    private void handleShuffleToggle() {
+        shuffledQueue.clear();
+
+        if (shuffleButton.isSelected()) {
+            rebuildShuffleQueue();
+        }
+    }
+
+    private void rebuildShuffleQueue() {
+        shuffledQueue.clear();
+
+        for (Song song : songsTableView.getItems()) {
+            if (!song.equals(loadedSong)) {
+                shuffledQueue.add(song);
+            }
+        }
+
+        Collections.shuffle(shuffledQueue, random);
+    }
+
+    private void finishPlaylistPlayback() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.seek(Duration.ZERO);
+        }
 
         playPauseButton.setText("▶");
         currentTimeLabel.setText("00:00");

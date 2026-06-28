@@ -81,16 +81,16 @@
                 <columns>
                     <TableColumn fx:id="titleColumn"
                                  text="TITLE"
-                                 prefWidth="230" />
+                                 prefWidth="200" />
                     <TableColumn fx:id="artistColumn"
                                  text="ARTIST"
-                                 prefWidth="210" />
+                                 prefWidth="190" />
                     <TableColumn fx:id="albumColumn"
                                  text="ALBUM"
-                                 prefWidth="220" />
+                                 prefWidth="190" />
                     <TableColumn fx:id="categoryColumn"
                                  text="CATEGORY"
-                                 prefWidth="130" />
+                                 prefWidth="100" />
                 </columns>
             </TableView>
         </VBox>
@@ -119,14 +119,14 @@
                     </tooltip>
                 </Button>
 
-                <Button fx:id="shuffleButton"
+                <ToggleButton fx:id="shuffleButton"
                         text="⇄"
                         mnemonicParsing="false"
                         styleClass="control-button">
                     <tooltip>
                         <Tooltip text="Shuffle" />
                     </tooltip>
-                </Button>
+                </ToggleButton>
 
                 <ToggleButton fx:id="loopToggleButton"
                               text="↻"
