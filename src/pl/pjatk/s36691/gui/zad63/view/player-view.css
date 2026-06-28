@@ -1,0 +1,281 @@
+.player-root {
+    -fx-background-color: #070812;
+    -fx-font-family: "Consolas", "Courier New", "Monospaced";
+}
+
+/* ===== TOP ===== */
+
+.top-panel {
+    -fx-padding: 22 26 14 26;
+    -fx-spacing: 18;
+    -fx-background-color: linear-gradient(to right, #070812, #11132b);
+    -fx-border-color: transparent transparent #1f2cff transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-row {
+    -fx-padding: 0;
+}
+
+.app-title {
+    -fx-text-fill: #d900ff;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+    -fx-effect: dropshadow(gaussian, #d900ff, 18, 0.35, 0, 0);
+}
+
+.app-subtitle {
+    -fx-text-fill: #00d9ff;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #00d9ff, 10, 0.4, 0, 0);
+}
+
+.now-playing-box {
+    -fx-padding: 16;
+    -fx-spacing: 10;
+    -fx-background-color: rgba(12, 14, 34, 0.88);
+    -fx-background-radius: 14;
+    -fx-border-color: #00d9ff;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0, 217, 255, 0.35), 20, 0.3, 0, 0);
+}
+
+.section-caption {
+    -fx-text-fill: #7f8cff;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.now-playing-label {
+    -fx-text-fill: #f6f7ff;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.progress-row {
+    -fx-padding: 4 0 0 0;
+}
+
+.time-label {
+    -fx-text-fill: #00d9ff;
+    -fx-font-size: 12px;
+    -fx-min-width: 48px;
+    -fx-alignment: center;
+}
+
+/* ===== LEFT PANEL ===== */
+
+.side-panel {
+    -fx-padding: 22 12 22 26;
+    -fx-spacing: 10;
+    -fx-background-color: #090a18;
+    -fx-border-color: transparent #25295e transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.categories-list {
+    -fx-background-color: #0c0e22;
+    -fx-control-inner-background: #0c0e22;
+    -fx-background-radius: 12;
+    -fx-border-color: #25295e;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 4;
+}
+
+.categories-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #c9ccff;
+    -fx-font-size: 13px;
+    -fx-padding: 10 12 10 12;
+}
+
+.categories-list .list-cell:hover {
+    -fx-text-fill: #00d9ff;
+    -fx-background-color: rgba(0, 217, 255, 0.10);
+}
+
+.categories-list .list-cell:selected {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: linear-gradient(to right, rgba(217, 0, 255, 0.65), rgba(0, 217, 255, 0.45));
+    -fx-background-radius: 8;
+}
+
+/* ===== CENTER ===== */
+
+.center-panel {
+    -fx-padding: 22 26 18 18;
+    -fx-spacing: 14;
+    -fx-background-color: #070812;
+}
+
+.search-row {
+    -fx-padding: 0;
+}
+
+.field-label {
+    -fx-text-fill: #d900ff;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.search-field {
+    -fx-background-color: #0c0e22;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #6870a8;
+    -fx-highlight-fill: #d900ff;
+    -fx-highlight-text-fill: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-color: #25295e;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 10 14 10 14;
+    -fx-font-size: 13px;
+}
+
+.search-field:focused {
+    -fx-border-color: #00d9ff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 217, 255, 0.35), 14, 0.3, 0, 0);
+}
+
+/* ===== TABLE ===== */
+
+.songs-table {
+    -fx-background-color: #0c0e22;
+    -fx-control-inner-background: #0c0e22;
+    -fx-table-cell-border-color: transparent;
+    -fx-background-radius: 14;
+    -fx-border-color: #25295e;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-padding: 4;
+}
+
+.songs-table .column-header-background {
+    -fx-background-color: #11132b;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.songs-table .column-header,
+.songs-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.songs-table .column-header .label {
+    -fx-text-fill: #00d9ff;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.songs-table .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.songs-table .table-row-cell:odd {
+    -fx-background-color: rgba(255, 255, 255, 0.025);
+}
+
+.songs-table .table-row-cell:hover {
+    -fx-background-color: rgba(0, 217, 255, 0.10);
+}
+
+.songs-table .table-row-cell:selected {
+    -fx-background-color: linear-gradient(to right, rgba(217, 0, 255, 0.58), rgba(0, 217, 255, 0.35));
+}
+
+.songs-table .table-cell {
+    -fx-text-fill: #dfe2ff;
+    -fx-font-size: 13px;
+    -fx-padding: 10 12 10 12;
+    -fx-border-color: transparent;
+}
+
+/* ===== BOTTOM / CONTROLS ===== */
+
+.bottom-panel {
+    -fx-padding: 0 26 22 26;
+    -fx-background-color: #070812;
+    -fx-spacing: 18;
+}
+
+.neon-separator .line {
+    -fx-border-color: #25295e;
+    -fx-border-width: 1 0 0 0;
+}
+
+.controls-row {
+    -fx-padding: 4 0 0 0;
+}
+
+.control-button {
+    -fx-min-width: 58px;
+    -fx-min-height: 48px;
+    -fx-background-color: #0c0e22;
+    -fx-text-fill: #00d9ff;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 16;
+    -fx-border-color: #00d9ff;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 217, 255, 0.40), 16, 0.35, 0, 0);
+    -fx-cursor: hand;
+}
+
+.control-button:hover {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(0, 217, 255, 0.18);
+    -fx-border-color: #d900ff;
+    -fx-effect: dropshadow(gaussian, rgba(217, 0, 255, 0.55), 20, 0.45, 0, 0);
+}
+
+.control-button:pressed {
+    -fx-translate-y: 1;
+}
+
+.toggle-button:selected,
+.control-button:selected {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: linear-gradient(to right, rgba(217, 0, 255, 0.75), rgba(0, 217, 255, 0.55));
+    -fx-border-color: #ffffff;
+}
+
+/* ===== SLIDER ===== */
+
+.slider .track {
+    -fx-background-color: #25295e;
+    -fx-background-radius: 8;
+    -fx-pref-height: 6;
+}
+
+.slider .thumb {
+    -fx-background-color: #d900ff;
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, #d900ff, 14, 0.55, 0, 0);
+    -fx-pref-width: 16;
+    -fx-pref-height: 16;
+}
+
+/* ===== SCROLLBARS ===== */
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #090a18;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #25295e;
+    -fx-background-radius: 8;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #00d9ff;
+}

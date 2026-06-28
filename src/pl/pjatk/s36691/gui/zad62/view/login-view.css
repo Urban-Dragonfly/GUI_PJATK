@@ -1,0 +1,38 @@
+.login-root {
+    -fx-spacing: 12;
+    -fx-padding: 24;
+    -fx-alignment: center;
+    -fx-background-color: #f4f4f4;
+}
+
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.login-form {
+    -fx-spacing: 4;
+    -fx-alignment: center-left;
+    -fx-max-width: 300;
+    -fx-padding: 16;
+}
+
+.field-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.input {
+    -fx-pref-width: 220;
+}
+
+.primary-button {
+    -fx-background-color: #2b579a;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+}
+
+.message {
+    -fx-font-size: 13px;
+}

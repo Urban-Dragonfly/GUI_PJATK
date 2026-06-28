@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:controller="pl.pjatk.s36691.gui.zad62.controller.LoginController"
+      xmlns:fx="http://javafx.com/fxml"
+      styleClass="login-root" >
+
+    <Label text="Logowanie"
+           styleClass="title" />
+
+    <VBox styleClass="login-form" >
+
+        <Label text="Login:"
+               styleClass="field-label" />
+
+        <TextField fx:id="usernameField"
+                   promptText="Login"
+                   styleClass="input" />
+
+        <Label text="Hasło:"
+               styleClass="field-label" />
+
+        <PasswordField fx:id="passwordField"
+                       promptText="Hasło"
+                       styleClass="input" />
+
+    </VBox>
+
+    <Button text="Zaloguj"
+            onAction="#handleLogin"
+            styleClass="primary-button" />
+
+    <Label fx:id="messageLabel"
+           styleClass="message" />
+
+</VBox>

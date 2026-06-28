@@ -1,4 +1,4 @@
-# GUI - zadania z PJATK
+# GUI — zadania z PJATK
 
 Repozytorium zawiera moje rozwiązania zadań realizowanych w ramach przedmiotu **Programowanie obiektowe i GUI** na **Polsko-Japońskiej Akademii Technik Komputerowych (PJATK)**.
 
@@ -36,9 +36,14 @@ src/pl/pjatk/s36691/gui/
 
 Do każdego zadania jest dodany odpowiadający mu plik `zadXX.md` z krótkim opisem.
 
+Zadania 62+ uruchamiane są poprzez komendę:
+```
+ mvn "-Dmain.class=pl.pjatk.s36691.gui.zad**.Main" javafx:run
+ ```
+
 ## Uwaga
 
-Opisy zadań w plikach Markdown są opracowane przy uzyciu AI na podstawie materiałów z zajęć i służą jako pomoc organizacyjna do nauki oraz dokumentowania postępów. AI nie jest wykorzystywane do pisania kodu, a jako mentor pomagający w nauce.
+Opisy zadań w plikach Markdown są opracowane przy użyciu AI na podstawie materiałów z zajęć i służą jako pomoc organizacyjna do nauki oraz dokumentowania postępów. AI nie jest wykorzystywane do pisania kodu, a jako mentor pomagający w nauce.
 
 Wszelkie komentarze mile widziane ;-)
 
