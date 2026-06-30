@@ -1,0 +1,16 @@
+.grid {
+    -fx-padding: 10px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+.text-field {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: gray;
+}
+
+.button {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
